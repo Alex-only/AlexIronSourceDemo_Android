@@ -99,6 +99,20 @@ dependencies {
 
 5、可编辑广告平台设置，选择是否开通报表api并拉取数据
 
+6、ironSource后台的操作可以参考下面流程
+
+创建Placement
+
+![](img/create_placement.png)
+
+开启应用的ironSource bidding
+
+![](img/open_bidding.png)
+
+配置瀑布流
+
+![](img/setup_waterfall.png)
+
 
 
 ### 四. ironSource接入其他广告平台

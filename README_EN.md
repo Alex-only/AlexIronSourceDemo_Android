@@ -97,6 +97,20 @@ com.alex.AlexISInterstitialAdapter
 
 5、You can edit the advertising platform settings, choose whether to open the report api and pull the data
 
+6、ironSource configuration
+
+Create Placement
+
+![](img/create_placement.png)
+
+Activate ironSource bidding
+
+![](img/open_bidding.png)
+
+Configure waterfall
+
+![](img/setup_waterfall.png)
+
 
 
 ### Step 4. ironSource integrates with other advertising platforms
