@@ -2,13 +2,13 @@
 
 ## Step 1. Integrate TopOn SDK
 
-Please refer to [TopOn SDK Integration Documentation](https://docs.toponad.com/#/en-us/android/android_doc/android_sdk_config_access) to integrate TopOn SDK, it is recommended to integrate **TopOn v6.2.30 and above**
+Please refer to [TopOn SDK Integration Documentation](https://docs.toponad.com/#/en-us/android/android_doc/android_sdk_config_access) to integrate TopOn SDK, it is recommended to integrate **TopOn v6.2.92 and above**
 
 
 
 ## Step 2. Introducing Alex Adapter
 
-1、Add the following code in build.gradle to import the platform SDK (The following is the import code of ironSource v7.3.0.1)
+1、Add the following code in build.gradle to import the platform SDK (The following is the import code of ironSource v7.5.2)
 
 ```java
 repositories {
@@ -20,10 +20,11 @@ repositories {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.gms:play-services-appset:16.0.2'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     
     //Add IronSource Mediation SDK dependency.
-    implementation 'com.ironsource.sdk:mediationsdk:7.3.0.1'
+    implementation 'com.ironsource.sdk:mediationsdk:7.5.2'
 }
 ```
 
@@ -85,6 +86,7 @@ The JSON configuration example when adding an ad source in the background is as 
 ```
 com.alex.AlexISRewardedVideoAdapter
 com.alex.AlexISInterstitialAdapter
+com.alex.AlexISBannerAdapter
 ```
 
 ![img](img/image3_en.png)

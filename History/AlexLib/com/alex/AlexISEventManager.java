@@ -252,10 +252,6 @@ public class AlexISEventManager {
                 }
                 if (eventListener != null) {
                     eventListener.onCallbackImpressionData(impressionData);
-                } else {
-                    if (ATSDK.isNetworkLogDebug()) {
-                        Log.e(TAG, "onImpressionSuccess but not found placementName: " + impressionData.getPlacement());
-                    }
                 }
 
             }
@@ -272,10 +268,6 @@ public class AlexISEventManager {
     public void registerForInter(String key, ImpressionEventListener eventListener) {
         mRecordInterstitialKey = key;
         mListenerMapForInter.put(key, eventListener);
-    }
-
-    public void registerForBanner(String key, ImpressionEventListener eventListener) {
-        mListenerMapForBanner.put(key, eventListener);
     }
 
     public void addLoadListenerForInter(LoadEventListener eventListener) {

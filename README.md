@@ -4,13 +4,13 @@ Tip: If necessary, please refer to [the English documentation](https://github.co
 
 ## 一. 接入TopOn SDK
 
-请参考[TopOn SDK集成文档](https://docs.toponad.com/#/zh-cn/android/android_doc/android_sdk_config_access)接入TopOn SDK，建议接入**TopOn v6.2.30及以上版本**
+请参考[TopOn SDK集成文档](https://docs.toponad.com/#/zh-cn/android/android_doc/android_sdk_config_access)接入TopOn SDK，建议接入**TopOn v6.2.92及以上版本**
 
 
 
 ## 二. 引入Alex Adapter
 
-1、在build.gradle中添加以下代码，引入平台SDK（以下为ironSource v7.3.0.1的引入代码）
+1、在build.gradle中添加以下代码，引入平台SDK（以下为ironSource v7.5.2的引入代码）
 
 ```java
 repositories {
@@ -22,10 +22,11 @@ repositories {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.gms:play-services-appset:16.0.2'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     
     //Add IronSource Mediation SDK dependency.
-    implementation 'com.ironsource.sdk:mediationsdk:7.3.0.1'
+    implementation 'com.ironsource.sdk:mediationsdk:7.5.2'
 }
 ```
 
@@ -87,6 +88,7 @@ dependencies {
 ```
 激励视频：com.alex.AlexISRewardedVideoAdapter
 插屏：com.alex.AlexISInterstitialAdapter
+横幅：com.alex.AlexISBannerAdapter
 ```
 
 ![img](img/image3.png)

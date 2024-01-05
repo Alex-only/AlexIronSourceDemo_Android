@@ -26,8 +26,6 @@ public class AlexISInitManager extends ATInitMediation {
     private volatile static AlexISInitManager sInstance;
     private AdInfo adInfo;
 
-    private Boolean mBannerHasBeenLoaded = false;
-
     public static AlexISInitManager getInstance() {
         if (sInstance == null) {
             synchronized (AlexISInitManager.class) {
@@ -150,21 +148,5 @@ public class AlexISInitManager extends ATInitMediation {
         this.adInfo = null;
 
         return result;
-    }
-
-    /**
-     * ISMediation Banner only needs one banner ad to initiate loading or display, so it needs to add a method to judge
-     * @param loaded
-     */
-    public void setNeedInterceptBannerLoad(boolean loaded) {
-        synchronized (mBannerHasBeenLoaded) {
-            mBannerHasBeenLoaded = loaded;
-        }
-    }
-
-    protected boolean needInterceptBannerLoad() {
-        synchronized (mBannerHasBeenLoaded) {
-            return mBannerHasBeenLoaded;
-        }
     }
 }
