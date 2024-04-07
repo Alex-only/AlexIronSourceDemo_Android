@@ -1,8 +1,8 @@
 package com.alex;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.anythink.core.api.ATInitMediation;
 import com.anythink.core.api.ATSDK;
@@ -10,6 +10,7 @@ import com.anythink.core.api.MediationInitCallback;
 import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
 import com.ironsource.mediationsdk.integration.IntegrationHelper;
+import com.ironsource.mediationsdk.sdk.InitializationListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +41,6 @@ public class AlexISInitManager extends ATInitMediation {
 
     @Override
     public void initSDK(Context context, Map<String, Object> serviceExtras, MediationInitCallback callback) {
-        if (!(context instanceof Activity)) {
-            if (callback != null) {
-                callback.onFail("Ironsource: please make sure to initialize the ironSource SDK with an Activity context");
-            }
-
-            return;
-        }
 
         if (hasInit) {
             if (callback != null) {
@@ -95,13 +89,18 @@ public class AlexISInitManager extends ATInitMediation {
 
 
         if (isLogDebug) {
-            IntegrationHelper.validateIntegration(((Activity) context));
+            IntegrationHelper.validateIntegration(context);
         }
 
-        IronSource.init((Activity) context, appKey);
-        hasInit = true;
+        IronSource.init(context, appKey, new InitializationListener() {
+            @Override
+            public void onInitializationComplete() {
+                Log.i("AlexISInitManager", "onInitializationComplete");
+                hasInit = true;
 
-        callbackResult(true, "");
+                callbackResult(true, "");
+            }
+        });
     }
 
 

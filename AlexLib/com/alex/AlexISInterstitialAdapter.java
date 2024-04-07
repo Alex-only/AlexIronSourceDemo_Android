@@ -29,10 +29,6 @@ public class AlexISInterstitialAdapter extends CustomInterstitialAdapter impleme
 
     @Override
     public void loadCustomNetworkAd(Context context, Map<String, Object> serverExtra, Map<String, Object> localExtra) {
-        if (!(context instanceof Activity)) {
-            notifyATLoadFail("", "Ironsource Mediation: context must be activity");
-            return;
-        }
 
         String mediationPlacementId = (String) serverExtra.get("plid");
         if (mediationPlacementId != null) {

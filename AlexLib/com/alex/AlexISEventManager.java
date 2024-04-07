@@ -11,6 +11,7 @@ import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.LevelPlayInterstitialListener;
 import com.ironsource.mediationsdk.sdk.LevelPlayRewardedVideoListener;
+import com.ironsource.mediationsdk.sdk.LevelPlayRewardedVideoManualListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +30,9 @@ public class AlexISEventManager {
     private final ConcurrentHashMap<String, ImpressionEventListener> mListenerMapForBanner;
 
     private final List<LoadEventListener> mLoadListenerMapForInter;
-    private final Object mLoadListenerLock = new Object();
+    private final List<LoadEventListener> mLoadListenerMapForRv;
+    private final Object mLoadListenerLockForRv = new Object();
+    private final Object mLoadListenerLockForInter = new Object();
 
     private String mRecordRewardVideoKey;
     private String mRecordInterstitialKey;
@@ -42,6 +45,7 @@ public class AlexISEventManager {
         mListenerMapForInter = new ConcurrentHashMap<>(3);
         mListenerMapForBanner = new ConcurrentHashMap<>(3);
 
+        mLoadListenerMapForRv = new ArrayList<>(3);
         mLoadListenerMapForInter = new ArrayList<>(3);
     }
 
@@ -64,20 +68,118 @@ public class AlexISEventManager {
         hasInit = true;
 
 
-        IronSource.setLevelPlayRewardedVideoListener(new LevelPlayRewardedVideoListener() {
+//        IronSource.setLevelPlayRewardedVideoListener(new LevelPlayRewardedVideoListener() {
+//            @Override
+//            public void onAdAvailable(AdInfo adInfo) {
+//                AlexISInitManager.getInstance().saveAdInfoForRV(adInfo);
+//                if (ATSDK.isNetworkLogDebug()) {
+//                    Log.e(TAG, "onAdAvailable: ----------" + adInfo.toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onAdUnavailable() {
+//                AlexISInitManager.getInstance().saveAdInfoForRV(null);
+//                if (ATSDK.isNetworkLogDebug()) {
+//                    Log.e(TAG, "onAdUnavailable: ----------");
+//                }
+//            }
+//
+//            @Override
+//            public void onAdOpened(AdInfo adInfo) {
+//                //for NPE
+//                if (mRecordRewardVideoKey == null) {
+//                    return;
+//                }
+//                ImpressionEventListener eventListener = mListenerMapForRv.get(mRecordRewardVideoKey);
+//                if (eventListener != null) {
+//                    eventListener.notifyPlayStart();
+//                }
+//            }
+//
+//            @Override
+//            public void onAdShowFailed(IronSourceError ironSourceError, AdInfo adInfo) {
+//                //for NPE
+//                if (mRecordRewardVideoKey == null) {
+//                    return;
+//                }
+//                ImpressionEventListener eventListener = mListenerMapForRv.remove(mRecordRewardVideoKey);
+//                if (eventListener != null) {
+//                    eventListener.notifyPlayFail(ironSourceError.getErrorCode() + "", ironSourceError.getErrorMessage());
+//                }
+//            }
+//
+//            @Override
+//            public void onAdClicked(Placement placement, AdInfo adInfo) {
+//                //for NPE
+//                if (mRecordRewardVideoKey == null) {
+//                    return;
+//                }
+//                ImpressionEventListener eventListener = mListenerMapForRv.get(mRecordRewardVideoKey);
+//                if (eventListener != null) {
+//                    eventListener.notifyClick();
+//                }
+//            }
+//
+//            @Override
+//            public void onAdRewarded(Placement placement, AdInfo adInfo) {
+//                //for NPE
+//                if (mRecordRewardVideoKey == null) {
+//                    return;
+//                }
+//                ImpressionEventListener eventListener = mListenerMapForRv.get(mRecordRewardVideoKey);
+//                if (eventListener != null) {
+//                    eventListener.notifyReward();
+//                }
+//            }
+//
+//            @Override
+//            public void onAdClosed(AdInfo adInfo) {
+//                //for NPE
+//                if (mRecordRewardVideoKey == null) {
+//                    return;
+//                }
+//                ImpressionEventListener eventListener = mListenerMapForRv.remove(mRecordRewardVideoKey);//need remove
+//                if (eventListener != null) {
+//                    eventListener.notifyClose();
+//                }
+//            }
+//        });
+
+
+        IronSource.setLevelPlayRewardedVideoManualListener(new LevelPlayRewardedVideoManualListener() {
+
             @Override
-            public void onAdAvailable(AdInfo adInfo) {
-                AlexISInitManager.getInstance().saveAdInfoForRV(adInfo);
+            public void onAdReady(AdInfo adInfo) {
                 if (ATSDK.isNetworkLogDebug()) {
-                    Log.e(TAG, "onAdAvailable: ----------" + adInfo.toString());
+                    Log.e(TAG, "onAdReady: ----------" + adInfo.toString());
                 }
+                synchronized (mLoadListenerLockForRv) {
+                    Iterator<LoadEventListener> iterator = mLoadListenerMapForRv.iterator();
+
+                    while (iterator.hasNext()) {
+                        LoadEventListener eventListener = iterator.next();
+                        if (eventListener != null) {
+                            eventListener.notifyLoaded(adInfo);
+                        }
+                        iterator.remove();
+                    }
+                }
+
             }
 
             @Override
-            public void onAdUnavailable() {
-                AlexISInitManager.getInstance().saveAdInfoForRV(null);
-                if (ATSDK.isNetworkLogDebug()) {
-                    Log.e(TAG, "onAdUnavailable: ----------");
+            public void onAdLoadFailed(IronSourceError ironSourceError) {
+                synchronized (mLoadListenerLockForRv) {
+                    Iterator<LoadEventListener> iterator = mLoadListenerMapForRv.iterator();
+
+                    while (iterator.hasNext()) {
+                        LoadEventListener eventListener = iterator.next();
+                        if (eventListener != null) {
+                            eventListener.notifyLoadFail(ironSourceError.getErrorCode() + "", ironSourceError.getErrorMessage());
+                        }
+                        iterator.remove();
+                    }
                 }
             }
 
@@ -125,6 +227,9 @@ public class AlexISEventManager {
                 }
                 ImpressionEventListener eventListener = mListenerMapForRv.get(mRecordRewardVideoKey);
                 if (eventListener != null) {
+                    eventListener.notifyPlayEnd();
+                }
+                if (eventListener != null) {
                     eventListener.notifyReward();
                 }
             }
@@ -150,7 +255,7 @@ public class AlexISEventManager {
                 if (ATSDK.isNetworkLogDebug()) {
                     Log.e(TAG, "onAdReady: ----------" + adInfo.toString());
                 }
-                synchronized (mLoadListenerLock) {
+                synchronized (mLoadListenerLockForInter) {
                     Iterator<LoadEventListener> iterator = mLoadListenerMapForInter.iterator();
 
                     while (iterator.hasNext()) {
@@ -165,7 +270,7 @@ public class AlexISEventManager {
 
             @Override
             public void onAdLoadFailed(IronSourceError ironSourceError) {
-                synchronized (mLoadListenerLock) {
+                synchronized (mLoadListenerLockForInter) {
                     Iterator<LoadEventListener> iterator = mLoadListenerMapForInter.iterator();
 
                     while (iterator.hasNext()) {
@@ -278,8 +383,14 @@ public class AlexISEventManager {
         mListenerMapForBanner.put(key, eventListener);
     }
 
+    public void addLoadListenerForRv(LoadEventListener eventListener) {
+        synchronized (mLoadListenerLockForRv) {
+            mLoadListenerMapForRv.add(eventListener);
+        }
+    }
+
     public void addLoadListenerForInter(LoadEventListener eventListener) {
-        synchronized (mLoadListenerLock) {
+        synchronized (mLoadListenerLockForInter) {
             mLoadListenerMapForInter.add(eventListener);
         }
     }
