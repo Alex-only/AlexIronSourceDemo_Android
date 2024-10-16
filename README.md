@@ -10,7 +10,7 @@ Tip: If necessary, please refer to [the English documentation](https://github.co
 
 ## 二. 引入Alex Adapter
 
-1、在build.gradle中添加以下代码，引入平台SDK（以下为ironSource v7.9.0的引入代码）
+1、在build.gradle中添加以下代码，引入平台SDK（以下为ironSource v8.4.0的引入代码）
 
 ```java
 repositories {
@@ -26,7 +26,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     
     //Add IronSource Mediation SDK dependency.
-    implementation 'com.ironsource.sdk:mediationsdk:7.9.0'
+    implementation 'com.ironsource.sdk:mediationsdk:8.4.0'
 }
 ```
 
