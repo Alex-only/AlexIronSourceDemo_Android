@@ -163,6 +163,8 @@ public class AlexISRewardedVideoAdapter extends CustomRewardVideoAdapter impleme
             }
 
             extraMap.put(AlexISConst.KEY_IMPRESSION_DATA, mILRD);
+
+            AlexISInitManager.getInstance().fillAdInfo(mPlacementName, extraMap, impressionData);
         }
     }
 

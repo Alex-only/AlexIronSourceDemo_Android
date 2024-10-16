@@ -149,6 +149,8 @@ public class AlexISInterstitialAdapter extends CustomInterstitialAdapter impleme
             }
 
             extraMap.put(AlexISConst.KEY_IMPRESSION_DATA, mILRD);
+
+            AlexISInitManager.getInstance().fillAdInfo(mPlacementName, extraMap, impressionData);
         }
     }
 

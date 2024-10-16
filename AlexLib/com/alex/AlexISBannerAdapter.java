@@ -280,6 +280,8 @@ public class AlexISBannerAdapter extends CustomBannerAdapter implements AlexISEv
             }
 
             extraMap.put(AlexISConst.KEY_IMPRESSION_DATA, mILRD);
+
+            AlexISInitManager.getInstance().fillAdInfo(mPlacementName, extraMap, impressionData);
         }
     }
 }

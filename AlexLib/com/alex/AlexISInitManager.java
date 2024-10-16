@@ -9,8 +9,11 @@ import com.anythink.core.api.ATSDK;
 import com.anythink.core.api.MediationInitCallback;
 import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
+import com.ironsource.mediationsdk.impressionData.ImpressionData;
 import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.sdk.InitializationListener;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,4 +169,25 @@ public class AlexISInitManager extends ATInitMediation {
             return mBannerHasBeenLoaded;
         }
     }
+
+    void fillAdInfo(String placementId, Map<String, Object> extraMap, ImpressionData impressionData) {
+        if (extraMap == null || impressionData == null) {
+            return;
+        }
+
+        JSONObject allData = impressionData.getAllData();
+        if (allData != null) {
+            extraMap.put(AlexISConst.KEY_AD_INFO, allData.toString());
+        }
+
+        extraMap.put(AlexISConst.KEY_REVENUE, impressionData.getRevenue());
+        extraMap.put(AlexISConst.KEY_AD_UNIT_ID, placementId);
+        extraMap.put(AlexISConst.KEY_FORMAT, impressionData.getAdUnit());
+        extraMap.put(AlexISConst.KEY_NETWORK_NAME, impressionData.getAdNetwork());
+        extraMap.put(AlexISConst.KEY_PLACEMENT, impressionData.getPlacement());
+        extraMap.put(AlexISConst.KEY_COUNTRY_CODE, impressionData.getCountry());
+
+        extraMap.put(AlexISConst.KEY_NETWORK_PLACEMENT_ID, impressionData.getInstanceId());
+    }
+
 }
