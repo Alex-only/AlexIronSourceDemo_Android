@@ -8,7 +8,7 @@ Please refer to [TopOn SDK Integration Documentation](https://docs.toponad.com/#
 
 ## Step 2. Introducing Alex Adapter
 
-1、Add the following code in build.gradle to import the platform SDK (The following is the import code of ironSource v7.9.0)
+1、Add the following code in build.gradle to import the platform SDK (The following is the import code of ironSource v8.4.0)
 
 ```java
 repositories {
@@ -24,7 +24,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     
     //Add IronSource Mediation SDK dependency.
-    implementation 'com.ironsource.sdk:mediationsdk:7.9.0'
+    implementation 'com.ironsource.sdk:mediationsdk:8.4.0'
 }
 ```
 
